@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  generator:
+    build: ./generator
+    ports:
+      - "5000:5000"
+    networks:
+      - recommender-network
+
+  invoker:
+    build: ./invoker
+    ports:
+      - "5001:5001"
+    depends_on:
+      - generator
+      - redis
+    networks:
+      - recommender-network
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    networks:
+      - recommender-network
+
+networks:
+  recommender-network:
+    driver: bridge
